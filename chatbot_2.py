@@ -9,7 +9,6 @@ st.caption("Ask anything below")
 st.divider()
 
 # Retrieve API key securely from Streamlit secrets
-# Make sure you have added GROQ_API_KEY in your Streamlit Cloud App Settings -> Secrets
 try:
     groq_api_key = st.secrets["GROQ_API_KEY"]
 except Exception:
@@ -28,10 +27,10 @@ with st.form("chat_form"):
 # Run only when submitted and input is provided
 if submitted and user_input:
     
-    # Initialize ChatGroq with the secure API key and model parameters
+    # Initialize ChatGroq with a valid, active model name
     llm = ChatGroq(
-        groq_api_key=groq_api_key, # Pass the key explicitly here
-        model="llama-3.1-8b-instant",
+        groq_api_key=groq_api_key,
+        model="llama-3.1-8b-instant",  # Active model ID
         temperature=0,
         max_tokens=None,
         timeout=None,
@@ -47,6 +46,11 @@ if submitted and user_input:
     # Generate response
     with st.spinner("Thinking..."):
         response = llm.invoke(messages)
+
+    # Display response
+    st.divider()
+    st.subheader("Response")
+    st.write(response.content)
 
     # Display response
     st.divider()
